@@ -85,6 +85,12 @@ const App = () => {
           />
         </div>
       )}
+      {/* If there are no todo list is empty */}
+      {todos.length === 0 ? (
+        <div className="container p-5">
+          <p className="text-center">No tasks to complete</p>
+        </div>
+      ) : null}
     </>
   );
 };
