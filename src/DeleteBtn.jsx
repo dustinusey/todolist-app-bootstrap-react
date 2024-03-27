@@ -9,7 +9,7 @@ const DeleteBtn = (props) => {
         checkedTodos.forEach(todo => Cookies.remove(`${todo.id}`));
         setTodos(todos.filter((todo) => !checkedTodos.includes(todo)));
         setCheckedTodos([]);
-        setErrors([]);
+        setErrors([]); alert('Hello World!');
       }}
       className="w-100 p-3"
       color="danger"

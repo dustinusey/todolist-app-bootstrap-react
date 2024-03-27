@@ -13,6 +13,10 @@ const App = () => {
   const [errors, setErrors] = useState([]);
   const [taskIdCounter, setTaskIdCounter] = useState(1);
 
+  /**
+  * Check for Cookies on first render.
+  * If Cookies are present, execute parseCookies() and set the taskIdCounter.
+  */
   useEffect(() => {
     if (Cookies.get() && Object.keys(Cookies.get()).length > 0) {
       const taskCounter = Cookies.get("taskCounter");
@@ -22,10 +26,13 @@ const App = () => {
   }, []);
 
   function addNewTodo(todo) {
-    setTaskIdCounter((prev) => prev + 1); // increment taskIdCounter
+    setTaskIdCounter((prev) => prev + 1); // increment taskIdCounter, prevents race conditions
     setTodos([...todos, { text: todo, id: taskIdCounter }]);
   }
 
+  /**
+   * Parse Cookies and set the todos list.
+   */
   function parseCookies() {
     const cookies = Cookies.get();
     const cookieTodos = [];
@@ -106,7 +113,7 @@ const App = () => {
           />
         </div>
       )}
-      {/* If todos list is empty */}
+      {/* If todos list is empty, show this message */}
       {todos.length === 0 ? (
         <div className="container p-5">
           <p className="text-center">No tasks to complete</p>
