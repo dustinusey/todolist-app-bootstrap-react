@@ -1,21 +1,35 @@
 import "bootstrap/dist/css/bootstrap.min.css";
 import { set } from "immutable";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Button, Form, FormGroup, Input, Label, ListGroup } from "reactstrap";
 import DeleteBtn from "./DeleteBtn";
 import TodoListItem from "./TodoListItem";
+import Cookies from "js-cookie";
 
 const App = () => {
   const [inputVal, setInputVal] = useState("");
   const [todos, setTodos] = useState([]);
   const [checkedTodos, setCheckedTodos] = useState([]);
   const [errors, setErrors] = useState([]);
+  const [taskIdCounter, setTaskIdCounter] = useState(1);
+
+  useEffect(() => {
+    if (Cookies.get() && Object.keys(Cookies.get()).length > 0) {
+      parseCookies();
+    }
+  }, []);
 
   function addNewTodo(todo) {
-    setTodos([
-      ...todos,
-      { text: todo, id: Math.random().toString(16).slice(2) },
-    ]);
+    setTodos([...todos, { text: todo, id: taskIdCounter }]);
+  }
+
+  function parseCookies() {
+    const cookies = Cookies.get();
+    const cookieTodos = [];
+    for (const [key, value] of Object.entries(cookies)) {
+      cookieTodos.push({ text: value, id: parseInt(key) });
+    }
+    setTodos([ ...cookieTodos]);
   }
 
   return (
@@ -30,6 +44,8 @@ const App = () => {
           addNewTodo(inputVal);
           setInputVal("");
           setErrors([]);
+          Cookies.set(`${taskIdCounter}`, inputVal);
+          setTaskIdCounter((prev) => prev + 1); // increment taskIdCounter
         }}
         className="container p-5"
       >
@@ -85,7 +101,7 @@ const App = () => {
           />
         </div>
       )}
-      {/* If there are no todo list is empty */}
+      {/* If todos list is empty */}
       {todos.length === 0 ? (
         <div className="container p-5">
           <p className="text-center">No tasks to complete</p>
