@@ -15,9 +15,9 @@ const TodoListItem = (props) => {
                 );
           }}
           type="checkbox"
-          id="todo"
+          id={todo.id}
         />
-        <Label check for="todo">
+        <Label check for={todo.id}>
           {todo.text}
         </Label>
       </FormGroup>

@@ -6,10 +6,10 @@ const DeleteBtn = (props) => {
   return (
     <Button
       onClick={() => {
+        checkedTodos.forEach(todo => Cookies.remove(`${todo.id}`));
         setTodos(todos.filter((todo) => !checkedTodos.includes(todo)));
         setCheckedTodos([]);
         setErrors([]);
-        Cookies.remove(`${checkedTodos[0].id}`);
       }}
       className="w-100 p-3"
       color="danger"
