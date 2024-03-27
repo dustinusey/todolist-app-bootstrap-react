@@ -11,10 +11,12 @@ const App = () => {
   const [todos, setTodos] = useState([]);
   const [checkedTodos, setCheckedTodos] = useState([]);
   const [errors, setErrors] = useState([]);
-  const [taskIdCounter, setTaskIdCounter] = useState(1);
+  const [taskIdCounter, setTaskIdCounter] = useState(0);
 
   useEffect(() => {
     if (Cookies.get() && Object.keys(Cookies.get()).length > 0) {
+      const taskCounter = Cookies.get("taskCounter");
+      setTaskIdCounter(parseInt(taskCounter));
       parseCookies();
     }
   }, []);
@@ -27,9 +29,11 @@ const App = () => {
     const cookies = Cookies.get();
     const cookieTodos = [];
     for (const [key, value] of Object.entries(cookies)) {
-      cookieTodos.push({ text: value, id: parseInt(key) });
+      if (key !== "taskCounter") {
+        cookieTodos.push({ text: value, id: key });
+      }
     }
-    setTodos([ ...cookieTodos]);
+    setTodos([...cookieTodos]);
   }
 
   return (
@@ -41,11 +45,12 @@ const App = () => {
             setErrors(["Todo cannot be empty !"]);
             return;
           }
+          setTaskIdCounter((prev) => prev + 1); // increment taskIdCounter
           addNewTodo(inputVal);
           setInputVal("");
           setErrors([]);
           Cookies.set(`${taskIdCounter}`, inputVal);
-          setTaskIdCounter((prev) => prev + 1); // increment taskIdCounter
+          Cookies.set("taskCounter", `${taskIdCounter}`);
         }}
         className="container p-5"
       >
