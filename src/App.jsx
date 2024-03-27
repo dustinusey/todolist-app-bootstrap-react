@@ -11,17 +11,18 @@ const App = () => {
   const [todos, setTodos] = useState([]);
   const [checkedTodos, setCheckedTodos] = useState([]);
   const [errors, setErrors] = useState([]);
-  const [taskIdCounter, setTaskIdCounter] = useState(0);
+  const [taskIdCounter, setTaskIdCounter] = useState(1);
 
   useEffect(() => {
     if (Cookies.get() && Object.keys(Cookies.get()).length > 0) {
       const taskCounter = Cookies.get("taskCounter");
-      setTaskIdCounter(parseInt(taskCounter));
+      setTaskIdCounter(parseInt(taskCounter) + 1);
       parseCookies();
     }
   }, []);
 
   function addNewTodo(todo) {
+    setTaskIdCounter((prev) => prev + 1); // increment taskIdCounter
     setTodos([...todos, { text: todo, id: taskIdCounter }]);
   }
 
@@ -45,7 +46,6 @@ const App = () => {
             setErrors(["Todo cannot be empty !"]);
             return;
           }
-          setTaskIdCounter((prev) => prev + 1); // increment taskIdCounter
           addNewTodo(inputVal);
           setInputVal("");
           setErrors([]);
